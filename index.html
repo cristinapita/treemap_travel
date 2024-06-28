@@ -9,9 +9,7 @@
     <script src="https://d3js.org/d3.v6.js"></script>
     <link rel="stylesheet" href="https://use.typekit.net/rvc5pbn.css">
     <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
-    <link href="https://api.mapbox.com/mapbox-gl-js/v3.2.0/mapbox-gl.css" rel="stylesheet">
-    <script src="https://api.mapbox.com/mapbox-gl-js/v3.2.0/mapbox-gl.js"></script>
-    <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
+   
     <style>
         .tooltip {
             background-color: #ffffff;
@@ -48,7 +46,6 @@
     <script>
         function drawTreemap() {
 
-        // set the dimensions and margins of the graph
         const margin = { top: 10, right: 10, bottom: 10, left: 10 };
 
        
@@ -58,7 +55,6 @@
 
         d3.select("#treemap").select("svg").remove();
 
-        // append the svg object to the body of the page
         const svg = d3.select("#treemap")
             .append("svg")
             .attr("width", width + margin.left + margin.right)
@@ -70,7 +66,6 @@
 
 
 
-        // Create a div element for the tooltip
         const tooltip = d3.select("#treemap")
             .append("div")
             .style("opacity", 0)
@@ -83,10 +78,8 @@
             .style("position", "absolute")
             .style("pointer-events", "none");
 
-        // read json data
         d3.json("https://raw.githubusercontent.com/cristinapita/story_bananas/main/data3.json").then(function (data) {
 
-            // Give the data to this cluster layout:
             const root = d3.hierarchy(data).sum(function (d) { return d.value }) // Here the size of each leave is given in the 'value' field in input data
             root.sort((a, b) => b.value - a.value);
 
@@ -94,7 +87,6 @@
 
 
 
-            // Then d3.treemap computes the position of each element of the hierarchy
             d3.treemap()
                 .size([width, height])
                 // .paddingTop(28)
@@ -111,12 +103,10 @@
 
                 const formatValue = d3.format(",");
 
-            // And a opacity scale
             const opacity = d3.scaleLinear()
                 .domain([0, 1425770])
                 .range([.5, 1])
 
-            // use this information to add rectangles:
             svg
                 .selectAll("rect")
                 .data(root.leaves())
@@ -133,7 +123,7 @@
                     d3.select(this).style("stroke", "white");
                     d3.select(this).style("stroke-width", "5");
                     d3.select(this).style("opacity", "0.8")
-                    tooltip.html.call(adjustTooltipPosition, event, d); // Llamar la función de ajuste de posición
+                    tooltip.html.call(adjustTooltipPosition, event, d); 
 
                 })
                 .on("mousemove", function (event, d) {
@@ -141,7 +131,7 @@
                     tooltip.html(`Country: ${d.data.name}<br>Volume (tonnes): ${formatValue(d.data.value)}`)
                     // .style("left", (event.pageX + 10) + "px")
                         // .style("top", (event.pageY - 10) + "px");
-                        tooltip.call(adjustTooltipPosition, event, d); // Actualizar posición mientras se mueve el mouse
+                        tooltip.call(adjustTooltipPosition, event, d); 
 
                 })
                 .on("mouseout", function (event, d) {
@@ -154,31 +144,28 @@
                 });
 
 
-            // and to add the text labels
             svg
                 .selectAll("text")
                 .data(root.leaves())
                 .enter()
                 .append("text")
-                .attr("x", function (d) { return d.x0 + 5 })    // +10 to adjust position (more right)
-                .attr("y", function (d) { return d.y0 + 20 })    // +20 to adjust position (lower)
+                .attr("x", function (d) { return d.x0 + 5 })   
+                .attr("y", function (d) { return d.y0 + 20 })   
                 .text(function (d) { return d.data.name; })
                 .attr("font-size", "1em")
                 .style("font-family", "Roboto")
-                .attr("fill", "white") // Cambia el color del texto según el grupo
-                .style("pointer-events", "none") // Evita que el texto afecte a los eventos del mouse
+                .attr("fill", "white") 
+                .style("pointer-events", "none") 
                 .each(function(d, i) {
                     const rectWidth = d.value / 1000;
                     const textWidth = this.getBBox().width;
                     
 
-                    // Oculta el texto si no cabe completamente dentro del rectángulo
                     if (textWidth > rectWidth) {
                         d3.select(this).style("visibility", "hidden");
                     }
                 });
 
-            // and to add the text labels
             // svg
             //     .selectAll("vals")
             //     .data(root.leaves())
@@ -195,13 +182,11 @@
             //             const rectWidth = d.x1 - d.x0;
             //             const textWidth = this.getBBox().width;
 
-            //             // Oculta el texto si no cabe completamente dentro del rectángulo
             //             if (textWidth > rectWidth) {
             //                 d3.select(this).style("visibility", "hidden");
             //             }
             //     });
 
-            // Add title for the 3 groups
             // svg
             //     .selectAll("titles")
             //     .data(root.descendants().filter(function (d) { return d.depth == 1 }))
@@ -213,7 +198,6 @@
             //     .attr("font-size", "19px")
             //     .attr("fill", function (d) { return color(d.data.name) })
 
-            // Add title for the 3 groups
             //     svg
             //         .append("text")
             //         .attr("x", 0)
@@ -225,10 +209,8 @@
         })
 
     }
-        // Initial draw
         drawTreemap();
 
-        // Redraw on resize
         window.addEventListener('resize', drawTreemap);
     </script>
 
