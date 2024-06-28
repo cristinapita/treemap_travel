@@ -108,7 +108,8 @@
             const color = d3.scaleOrdinal()
                 .domain(["Latin America", "ACP countries", "European Union"])
                 .range(["#FFC654", "#444B55", "#5498FF"])
-                const visibilityMap = {};
+
+                const formatValue = d3.format(",");
 
             // And a opacity scale
             const opacity = d3.scaleLinear()
@@ -137,8 +138,8 @@
                 })
                 .on("mousemove", function (event, d) {
                     tooltip
-                        .html("Country: " + d.data.name + "<br>Volume (tonnes): " + d.data.value)
-                        // .style("left", (event.pageX + 10) + "px")
+                    tooltip.html(`Country: ${d.data.name}<br>Volume (tonnes): ${formatValue(d.data.value)}`)
+                    // .style("left", (event.pageX + 10) + "px")
                         // .style("top", (event.pageY - 10) + "px");
                         tooltip.call(adjustTooltipPosition, event, d); // Actualizar posición mientras se mueve el mouse
 
